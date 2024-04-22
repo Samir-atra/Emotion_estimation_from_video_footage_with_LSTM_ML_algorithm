@@ -1,0 +1,29 @@
+- to cretae the second dataset that contain the happy sad and neutral emotions.
+- loaded the fer2013 dataset, take only the happy, sad and neutral emotions 3, 4 and 6.
+- split into training, validation and test sets.
+- run it through mediapipe to get only valid and understood images.
+- find the relevant blendshapes for happy, neutral and sad emotions, sum to 33 blendshapes.
+- augment the training set, takeout the ununderstandable images and add the augmented ones. end up with around 30000 images augmented and non-augmented
+
+- create a blendshapes dataset.
+- chenged the happy, sad, and neutral labels to 0,1,2, and transfered them to categorical (one-hot) instead of numbers.
+- train the model, and compile with categorical crossentropy and adam optimizer with metrics, accuracy and f1-score 
+- implement keras tuner for the learning rate and check for improvement.
+
+experiments record:
+
+- training with learning rate = 0.00005 for 100 epochs nothing normalized gives: 
+    loss: 0.6518 - accuracy: 0.7014 - f1_score: 0.6602 - val_loss: 0.6610 - val_accuracy: 0.6920 - val_f1_score: 0.6572
+- training with learning rate = 0.00005 for 100 epochs train and val normalized gives:
+    loss: 0.6358 - accuracy: 0.7094 - f1_score: 0.6693 - val_loss: 0.6490 - val_accuracy: 0.6956 - val_f1_score: 0.6555
+- using the gradient clipping, a learning rate = 0.0046 and after the 100 epoch:
+    loss: 0.5600 - categorical_accuracy: 0.7457 - f1_score: 0.7129 - val_loss: 0.6512 - val_categorical_accuracy: 0.6966 - val_f1_score: 0.6490
+    in this case after running for more than 100 epochs, will give a few jumps in the loss that means the training is failing but 
+    accuracy and f1-score stay steadily improving.
+- try to improve the fit and reduce bias by adding another lstm layer, keeping the LR and epochs same:
+    loss: 0.5220 - categorical_accuracy: 0.7618 - f1_score: 0.7307 - val_loss: 0.6777 - val_categorical_accuracy: 0.6935 - val_f1_score: 0.6604
+    after evaluating and testing this one, it does not work because the result will be normalized. so will retrain with out normalization.
+
+- in keras tuner 0.001 is best so far when accuracy is not included
+- when include accuracy and train on the above learning rate, the gradient explodes after around 40 epochs.
+- use weight initialization and gradient clipping to tackle that.
