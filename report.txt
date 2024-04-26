@@ -1,4 +1,4 @@
-- to cretae the second dataset that contain the happy sad and neutral emotions.
+- to create the second dataset that contain the happy sad and neutral emotions.
 - loaded the fer2013 dataset, take only the happy, sad and neutral emotions 3, 4 and 6.
 - split into training, validation and test sets.
 - run it through mediapipe to get only valid and understood images.
@@ -16,6 +16,9 @@ experiments record:
     loss: 0.6518 - accuracy: 0.7014 - f1_score: 0.6602 - val_loss: 0.6610 - val_accuracy: 0.6920 - val_f1_score: 0.6572
 - training with learning rate = 0.00005 for 100 epochs train and val normalized gives:
     loss: 0.6358 - accuracy: 0.7094 - f1_score: 0.6693 - val_loss: 0.6490 - val_accuracy: 0.6956 - val_f1_score: 0.6555
+    in keras tuner 0.001 is best so far when accuracy is not included.
+    when include accuracy and train on the above learning rate, the gradient explodes after around 40 epochs.
+    use weight initialization and gradient clipping to tackle that.
 - using the gradient clipping, a learning rate = 0.0046 and after the 100 epoch:
     loss: 0.5600 - categorical_accuracy: 0.7457 - f1_score: 0.7129 - val_loss: 0.6512 - val_categorical_accuracy: 0.6966 - val_f1_score: 0.6490
     in this case after running for more than 100 epochs, will give a few jumps in the loss that means the training is failing but 
@@ -23,7 +26,28 @@ experiments record:
 - try to improve the fit and reduce bias by adding another lstm layer, keeping the LR and epochs same:
     loss: 0.5220 - categorical_accuracy: 0.7618 - f1_score: 0.7307 - val_loss: 0.6777 - val_categorical_accuracy: 0.6935 - val_f1_score: 0.6604
     after evaluating and testing this one, it does not work because the result will be normalized. so will retrain with out normalization.
+- removed normalization and training with same LR and architecture as above to get the following results:
+    loss: 0.5789 - categorical_accuracy: 0.7375 - f1_score: 0.7030 - val_loss: 0.6428 - val_categorical_accuracy: 0.7141 - val_f1_score: 0.6738 
+    when implemt the model to the gaze project it gives solid results.
+    the full model setup is: 
+    -   model = tf.keras.Sequential([
+        tf.keras.layers.LSTM(units = 33, activation = 'relu', return_sequences= True),
+        tf.keras.layers.LSTM(units = 12, activation = 'relu', return_sequences= False),
+        tf.keras.layers.Dense(units = 3, activation = 'softmax'),
+        ])
 
-- in keras tuner 0.001 is best so far when accuracy is not included
-- when include accuracy and train on the above learning rate, the gradient explodes after around 40 epochs.
-- use weight initialization and gradient clipping to tackle that.
+
+        # Compiling the RNN
+        model.compile(loss=tf.keras.losses.CategoricalCrossentropy(),
+                    optimizer= tf.keras.optimizers.Adam(learning_rate = 0.00464489028556945, clipnorm=1),
+                    metrics = [tf.keras.metrics.CategoricalAccuracy(), tf.keras.metrics.F1Score()])
+
+
+        # Fitting the RNN to the Training set
+        model.fit(x=X_train, y=Y_train, validation_data = (X_val,y_val) ,epochs = 100)
+
+to further improve the model:
+try regularization for overfitting then test with different optimizers, 
+get the confusion matrix
+get spontanious dataset
+
