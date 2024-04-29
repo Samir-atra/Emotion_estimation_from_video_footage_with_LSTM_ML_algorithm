@@ -46,8 +46,52 @@ experiments record:
         # Fitting the RNN to the Training set
         model.fit(x=X_train, y=Y_train, validation_data = (X_val,y_val) ,epochs = 100)
 
+
+
+=================================================================================================================================================
+
+
+
 to further improve the model:
 try regularization for overfitting then test with different optimizers, 
 get the confusion matrix
 get spontanious dataset
 
+running keras tuner:
+best so far:
+Trial 4 summary
+Hyperparameters:
+lr: 0.00020047766795977846
+unites: 8
+beta: 0.7
+Score: 0.7140657305717468
+
+and:
+Best val_categorical_accuracy So Far: 0.7125256657600403
+|Best Value So Far |Hyperparameter
+|0.0010147         |lr
+|18                |unites
+|0.9               |beta
+
+- after a few trials without improvement, checked the counts of the classes of the dataset, and equalized them to 7500 each after around 13000, 7500, and 9000
+after fixing the dtaset it shows significant improvements but it has overfitting so will use dropout and kernel initialization with uniform_glorot to avoid that.
+
+- after increasing the number of neurons for the hidden layers and the number of hidden layers themselves, found that with tanh as activation function 
+the model improve the training result but overfit while with relu, it does not get to 70%
+
+- after a few experiments with different model architectures from making the lstm bidirectional to adding kernel regularizer and 
+recurrent dropout only variance improved but the bias stayed the same,turned to the optimizer again, and noticed the ema_momentum has a big effect on 
+the accuracy so continued and included amsgrad, and run for 300 epochs 
+
+- after so many trials with lstm and fully dense model think that the quality of the data is affecting the results and better the 73% accuracy is not possible.
+so found the confusion matrix for the dense model to be:
+[[746,  11,  76],
+[ 53, 279, 163],
+[ 51, 293, 242]]
+
+and for the LSTM test 73% is:
+[[754,  22,  57],
+[ 58, 209, 228],
+[ 54,  91, 441]]
+
+so lstm is better
