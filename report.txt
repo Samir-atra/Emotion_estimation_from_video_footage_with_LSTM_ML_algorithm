@@ -93,5 +93,14 @@ and for the LSTM test 73% is:
 [[754,  22,  57],
 [ 58, 209, 228],
 [ 54,  91, 441]]
+both cases shows that the major issue happens between the sad and neutral images, and from previous experience the neutral face would be predicted as sad rather than happy when the dataset
+does not include neutral class, so it is either more work on the model or the final product is not so reasonable.
 
-so lstm is better
+so lstm is better, and that is encoureging for further experimentation, so will keep the idea of changing the dataset aside for now and work on lstm.
+- now keeping the learning rate in the range e-4 to e-5 and increasing the size of the model by number of neurons and hidden layers and using activation function selu 
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+- after training for 600 epochs reached 71 validation accuracy again with a steady and smooth improvement line for loss, accuracy and f1 score. 
+so now will train for 1000 epochs and then decide what's next.
+
