@@ -50,57 +50,64 @@ experiments record:
 
 =================================================================================================================================================
 
+to further improve the model: 
+try regularization for overfitting then test with different optimizers,  
+get the confusion matrix 
+get spontanious dataset 
 
 
-to further improve the model:
-try regularization for overfitting then test with different optimizers, 
-get the confusion matrix
-get spontanious dataset
+running keras tuner: 
+best so far: 
+Hyperparameters: 
+lr: 0.00020047766795977846 
+unites: 8 
+beta: 0.7 
+Score: 0.7140657305717468 
 
-running keras tuner:
-best so far:
-Trial 4 summary
-Hyperparameters:
-lr: 0.00020047766795977846
-unites: 8
-beta: 0.7
-Score: 0.7140657305717468
+and: 
+Best val_categorical_accuracy So Far: 0.7125256657600403 
+|Best Value So Far |Hyperparameter 
+|0.0010147         |lr 
+|18                |unites 
+|0.9               |beta 
 
-and:
-Best val_categorical_accuracy So Far: 0.7125256657600403
-|Best Value So Far |Hyperparameter
-|0.0010147         |lr
-|18                |unites
-|0.9               |beta
 
-- after a few trials without improvement, checked the counts of the classes of the dataset, and equalized them to 7500 each after around 13000, 7500, and 9000
-after fixing the dtaset it shows significant improvements but it has overfitting so will use dropout and kernel initialization with uniform_glorot to avoid that.
+- after a few trials without improvement, checked the counts of the classes of the dataset, and equalized them to 7500 each after around 13000, 7500, and 9000, and added a dataset shuffling before training. 
+after fixing the dataset it shows significant improvements but it has overfitting so will use dropout and kernel initialization with uniform_glorot to avoid that. 
 
-- after increasing the number of neurons for the hidden layers and the number of hidden layers themselves, found that with tanh as activation function 
-the model improve the training result but overfit while with relu, it does not get to 70%
+- after increasing the number of neurons for the hidden layers and maybe they look too much in comparison to the number of the features but experiments give good results and the number of hidden layers themselves, found that with tanh as activation function the model improve the training result but overfit while with relu, it does not get to 70% 
 
-- after a few experiments with different model architectures from making the lstm bidirectional to adding kernel regularizer and 
-recurrent dropout only variance improved but the bias stayed the same,turned to the optimizer again, and noticed the ema_momentum has a big effect on 
-the accuracy so continued and included amsgrad, and run for 300 epochs 
+- after a few experiments with different model architectures from making the lstm bidirectional to adding kernel regularizer and recurrent dropout only variance improved but the bias stayed the same, turned to the optimizer again, and noticed the ema_momentum has a big effect on the accuracy so continued and included amsgrad, and run for 300 epochs  
 
-- after so many trials with lstm and fully dense model think that the quality of the data is affecting the results and better the 73% accuracy is not possible.
-so found the confusion matrix for the dense model to be:
-[[746,  11,  76],
-[ 53, 279, 163],
-[ 51, 293, 242]]
+ - after so many trials with lstm and fully dense model think that the quality of the data is affecting the results and better the 73% accuracy is not possible. 
 
-and for the LSTM test 73% is:
-[[754,  22,  57],
-[ 58, 209, 228],
-[ 54,  91, 441]]
-both cases shows that the major issue happens between the sad and neutral images, and from previous experience the neutral face would be predicted as sad rather than happy when the dataset
-does not include neutral class, so it is either more work on the model or the final product is not so reasonable.
+so found the confusion matrix for the dense model to be: 
 
-so lstm is better, and that is encoureging for further experimentation, so will keep the idea of changing the dataset aside for now and work on lstm.
-- now keeping the learning rate in the range e-4 to e-5 and increasing the size of the model by number of neurons and hidden layers and using activation function selu 
+[[746, 11, 76], 
+[ 53, 279, 163], 
+[ 51, 293, 242]] 
 
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+and for the LSTM test 73% from past week is: 
+
+[[754, 22, 57], 
+[ 58, 209, 228], 
+[ 54,  91, 441]] 
+
+both cases shows that the major issue happens between the sad and neutral images, and from previous experience the neutral face would be predicted as sad rather than happy 
+when the dataset does not include neutral class, so it is either more work on the model or the final product is not so reasonable. 
+so lstm is better, and that is encouraging for further experimentation, so will keep the idea of changing the dataset aside for now and work on lstm. 
+- now keeping the learning rate in the range e-4 to e-5 and increasing the size of the model to increase its capacity since it stops improving after some epochs with big bias. 
+By increasing the number of neurons and hidden layers and using activation function selu because the relu makes the loss explode after a few epochs probably 
+because does not have a negative part while tanh works fast but stops improving early, reasoned because the slope goes to zero for big values so from the photo 
+
+ 
+ and that showed improvement but took much time to get results since the epoch takes more time and more epohs are required. 
+
+ 
+There will not be a test model this week. 
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 - after training for 600 epochs reached 71 validation accuracy again with a steady and smooth improvement line for loss, accuracy and f1 score. 
 so now will train for 1000 epochs and then decide what's next.
 
+started creating the full dataset that includes the happy, sad and unknown emotions 
