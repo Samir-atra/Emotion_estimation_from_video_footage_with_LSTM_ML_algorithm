@@ -110,4 +110,10 @@ There will not be a test model this week.
 - after training for 600 epochs reached 71 validation accuracy again with a steady and smooth improvement line for loss, accuracy and f1 score. 
 so now will train for 1000 epochs and then decide what's next.
 
-started creating the full dataset that includes the happy, sad and unknown emotions 
+- started creating the full dataset that includes the happy, sad and unknown emotions, truncate the floating points of the dataset for 4 digits only
+then found that the sad class will disappear if thi is the case.
+
+- still training on the same model. while changing the Hyperparameters, and some ideas are assigning weights to the classes or initializing the kernels with a certain range.
+- also visualizing the features might give an idea about what is happening, there are 5 non-relevant features.
+
+- the main issue now is that the unknown class is taking over the happy and sad classes. 
