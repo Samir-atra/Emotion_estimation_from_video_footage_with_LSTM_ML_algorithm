@@ -110,10 +110,70 @@ There will not be a test model this week.
 - after training for 600 epochs reached 71 validation accuracy again with a steady and smooth improvement line for loss, accuracy and f1 score. 
 so now will train for 1000 epochs and then decide what's next.
 
-- started creating the full dataset that includes the happy, sad and unknown emotions, truncate the floating points of the dataset for 4 digits only
-then found that the sad class will disappear if thi is the case.
+- started creating the full dataset that includes the happy, sad and unknown emotions and that is done by the following:
+    - take 4000 images from the happy and sad classes since this is the maximum number possible while keeping the classes equal.
+    - from the other classes take 1500 each and since the disgust class has only around 500 so it will be reasonably equal to the other 
+    classes in the dataset.
+    - for the validation and test sets included all images with the full count for each of them.
 
-- still training on the same model. while changing the Hyperparameters, and some ideas are assigning weights to the classes or initializing the kernels with a certain range.
+- truncate the floating points of the dataset for 4 digits only then found that the sad class will disappear if this is the case.
+
+- still training on the same model. while changing the Hyperparameters such as regularization lambda, number of hidden layer, number of units, 
+learning rate and others, and some ideas are assigning weights to the classes or initializing the kernels with a certain range.
 - also visualizing the features might give an idea about what is happening, there are 5 non-relevant features.
+[[235 42 14] 
+
+[120 786 204]  
+
+[ 23 117 105]] 
+
+And the test metrics for the model shared are: 
+
+categorical_accuracy: 0.6788 - categorical_crossentropy: 0.7182 - f1_score: 0.6169 - loss: 0.7185 
 
 - the main issue now is that the unknown class is taking over the happy and sad classes. 
+
+
+------------------------------------------------------------------------------------------------------------------------------------------
+- for the model  epoch:886-val_loss:0.7097.keras  the metrics are: 
+loss: 0.6918 - categorical_crossentropy: 0.6914 - categorical_accuracy: 0.7005 - f1_score: 0.6209
+
+and the confusion matrix is:
+[[243  35  13]
+ [121 813 176]
+ [ 23 125  97]]
+
+ when changing the batch size from 128 to 256 it shows some behavior of delay, since it takes more time to reach the same results.
+- using the 150 batch size since it is the square root of the number of training instances. and it shows a consistant improvement in the first
+20 epochs, so will work using it.
+
+things to do:
+- normalize then split the dataset and apply the mean and standard deviation on all sets.
+- save the mean and sdv to normalize the camera footage before feeding into the model.
+- create scatter plots for features instead of normal plots.
+- create scatter plots for class vs. features.
+- calculate correlation factors and create correlation plots.
+
+after training for 5000 epochs, the two best checkpoint test metrics are:
+the first epoch:3636-val_loss:0.6552.keras is:
+loss: 0.6283 - categorical_crossentropy: 0.6280 - categorical_accuracy: 0.7139 - f1_score: 0.6354
+
+[[241  41   9]
+ [ 96 836 178]
+ [ 18 129  98]]
+
+and the second epoch:4437-val_loss:0.6506.keras is:
+loss: 0.6238 - categorical_crossentropy: 0.6235 - categorical_accuracy: 0.7199 - f1_score: 0.6298
+
+[[251  35   5]
+ [110 850 150]
+ [ 21 140  84]]
+
+ - for these models applying on the gaze project it shows a good behavior but a neutral face is sad with out eye contact otherwise it is unknown.
+ that is one obvious flow.
+ - with smaller network and less numbers of epochs the happy emotion gets less understandable and the sadness understanding increase significantly.
+ - running an even smaller model will get the happy and sad almose the same understandablity but confuse them with unknown.
+
+ - when normalizing found thea it will give a reversed effect since the blendshapes are already probabilities.
+ - enlarge the images and interpolate, is one idea to improve the model performance quality.
+ 
