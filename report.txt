@@ -6,6 +6,9 @@
 - augment the training set, takeout the ununderstandable images and add the augmented ones. end up with around 30000 images augmented and non-augmented
 
 - create a blendshapes dataset.
+- - before this point I was using mean squared error loss function, but after an objection from/discussion with Muhamed Riza in class about the loss function, 
+I had to look again and found that categorical cross entropy is the more suitable one. 
+
 - chenged the happy, sad, and neutral labels to 0,1,2, and transfered them to categorical (one-hot) instead of numbers.
 - train the model, and compile with categorical crossentropy and adam optimizer with metrics, accuracy and f1-score 
 - implement keras tuner for the learning rate and check for improvement.
@@ -176,4 +179,13 @@ loss: 0.6238 - categorical_crossentropy: 0.6235 - categorical_accuracy: 0.7199 -
 
  - when normalizing found thea it will give a reversed effect since the blendshapes are already probabilities.
  - enlarge the images and interpolate, is one idea to improve the model performance quality.
- 
+
+ - the first model 'epoch_55-val_loss_0.6160.keras' trained with weight decay and tanh as activation function for all the hidden layers shows an improvement with metrics:
+ loss: 0.5949 - categorical_crossentropy: 0.5949 - categorical_accuracy: 0.7570 - f1_score: 0.6129
+
+ [[216  71   4]
+ [ 62 982  66]
+ [ 14 184  47]]
+
+ - sent a follow up email about multipie dataset
+ - found the correlation matrix of the features from the different classes.
