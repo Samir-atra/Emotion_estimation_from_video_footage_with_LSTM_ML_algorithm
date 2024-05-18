@@ -189,3 +189,19 @@ loss: 0.6238 - categorical_crossentropy: 0.6235 - categorical_accuracy: 0.7199 -
 
  - sent a follow up email about multipie dataset
  - found the correlation matrix of the features from the different classes.
+
+- find the images in the test set that are being mis classified, after indexing the dataset and reverse access them.
+- each class good and bad, and the values of the features that are well classified and the range that is not well classified.
+
+_______________________________________________________________________________________________________________________________________________________________________________
+
+
+- look into the probabilities of the different classes
+- try fine tuning the model
+- check whisper for nlp
+- the problem owner is happy with LSTM so far and he will be waiting for the final report
+
+- to find the images that get mispredicted, recreated the testset, by adding an extra column with an index number and the same numbers get 
+assigned to the blendshapes of the images in the blends dataset, then predict the classes using the model and creat a list with the indices of the 
+mispredicted images, to visualize them later and find if there is a pattern between them.
+
