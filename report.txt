@@ -205,3 +205,10 @@ ________________________________________________________________________________
 assigned to the blendshapes of the images in the blends dataset, then predict the classes using the model and creat a list with the indices of the 
 mispredicted images, to visualize them later and find if there is a pattern between them.
 
+- doing this shows that the misclassified images also contains a type of noise such as a hand covering the face partially or a cup of drink or big facial hair 
+so it is obvious and does not require further investigation
+
+- sent an email to Marijn asking about the dropout unexpected behavior
+- checked for the non relevant blendshapes in the augmented training set and found that 34 only are the relevant ones for a dataset including all the emotions
+so recreated the blendshapes datasets and will train on them.
+- starting by running keras tuner to find best parameters
