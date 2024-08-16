@@ -1,5 +1,6 @@
 import replicate
 
+# a prompt to use the kandinski model to generate images of happy faces and sad faces.
 output = replicate.run(
     "ai-forever/kandinsky-2:3c6374e7a9a17e01afe306a5218cc67de55b19ea536466d6ea2602cfecea40a9",
     input={
