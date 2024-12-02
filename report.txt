@@ -1,3 +1,42 @@
+- Implemented MediaPipe to inference and visualize on one image with one face or more. 
+- Visualized the Blendshapes of the image as a bar graph  
+- Going through a few images found that the relevant Blendshapes are: 
+ - Happiness 
+  - Mouth smile left 
+  - Mouth smile right 
+  - Eye squint 
+ - Sadness 
+  - Mouth shrug lower 
+  - Brow down left 
+  - Brow down right 
+  - Brow inner up 
+- Downloaded the fer2013 dataset and split it into training, validation, and test 
+- Now either take all the dataset images and record the blendshapes to better understand it, or try to build a classification model
+to classify images according to the blendshapes but the second one does not make sense because why using mediapipe? Instead of a 
+classification model only. 
+- Read the dataset as images and visualized them 
+- Created a repository for the project and added team members 
+- Iterated through the dataset to split into training, validation, test 
+- Found counts of the datasets and the emotions and bad images in the training dataset 
+- Data augmentation by iterating through the dataset and running every image through a keras sequential model for rescaling
+to (1/255) besides random rotation and random flipping, and then casting to a numpy array 
+- Notice that it is not possible to rotate or flip the image without rescaling, and rescaling to (1/127) will change the 
+brightness of the image or the color in general so this setup is not changeable for now. 
+- Sent an email to mediapie to get the dataset 
+- To be able to detect the blendshapes of the image using mediapipe, need to rescale to (1/255) augmented the image and then rescale back by (1*255). 
+- And doing that shows that augmenting will result in different blendshapes for the same base image. 
+- Make a threshold of 0.4 for the blendshapes and loop through the dataset to find which blendshapes have more than 100 
+instances with more than 0.4 score, and consider it as relevant. 
+- Loop through the dataset and create a new one with the relevant blendshapes for happiness and sadness. And for this version augmentation did not get used. 
+- Build an LSTM model and train it on the blendshapes dataset. 
+- Many iterations on the model have been done to improve its performance. 
+- The hyperparameters that got considered are: 
+ - Iterations number 
+ - Batch size 
+ - LSTM number of units 
+
+_-_-_-_-_-_-_-_-_-_-_-_-_-_-____________________________------------------------------------------------------____________________------------
+
 - to create the second dataset that contain the happy sad and neutral emotions.
 - loaded the fer2013 dataset, take only the happy, sad and neutral emotions 3, 4 and 6.
 - split into training, validation and test sets.
@@ -78,9 +117,11 @@ Best val_categorical_accuracy So Far: 0.7125256657600403
 - after a few trials without improvement, checked the counts of the classes of the dataset, and equalized them to 7500 each after around 13000, 7500, and 9000, and added a dataset shuffling before training. 
 after fixing the dataset it shows significant improvements but it has overfitting so will use dropout and kernel initialization with uniform_glorot to avoid that. 
 
-- after increasing the number of neurons for the hidden layers and maybe they look too much in comparison to the number of the features but experiments give good results and the number of hidden layers themselves, found that with tanh as activation function the model improve the training result but overfit while with relu, it does not get to 70% 
+- after increasing the number of neurons for the hidden layers and maybe they look too much in comparison to the number of the features but experiments give good results and the number of hidden layers themselves,
+ found that with tanh as activation function the model improve the training result but overfit while with relu, it does not get to 70% 
 
-- after a few experiments with different model architectures from making the lstm bidirectional to adding kernel regularizer and recurrent dropout only variance improved but the bias stayed the same, turned to the optimizer again, and noticed the ema_momentum has a big effect on the accuracy so continued and included amsgrad, and run for 300 epochs  
+- after a few experiments with different model architectures from making the lstm bidirectional to adding kernel regularizer and recurrent dropout only variance improved but the bias stayed the same,
+ turned to the optimizer again, and noticed the ema_momentum has a big effect on the accuracy so continued and included amsgrad, and run for 300 epochs  
 
  - after so many trials with lstm and fully dense model think that the quality of the data is affecting the results and better the 73% accuracy is not possible. 
 
@@ -196,10 +237,11 @@ loss: 0.6238 - categorical_crossentropy: 0.6235 - categorical_accuracy: 0.7199 -
 _______________________________________________________________________________________________________________________________________________________________________________
 
 
-- look into the probabilities of the different classes
-- try fine tuning the model
+
 - check whisper for nlp
 - the problem owner is happy with LSTM so far and he will be waiting for the final report
+- look into the probabilities of the different classes
+- try fine tuning the model
 
 - to find the images that get mispredicted, recreated the testset, by adding an extra column with an index number and the same numbers get 
 assigned to the blendshapes of the images in the blends dataset, then predict the classes using the model and creat a list with the indices of the 
@@ -212,3 +254,8 @@ so it is obvious and does not require further investigation
 - checked for the non relevant blendshapes in the augmented training set and found that 34 only are the relevant ones for a dataset including all the emotions
 so recreated the blendshapes datasets and will train on them.
 - starting by running keras tuner to find best parameters
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+- passed the dataset blendshapes through a threshold of 0.4 and found 34 blendshapes are the most relevant, working with this number will make the training and prediction process 
+much faster but tuning the hyperparameters and the search, trining process will take so much time that is not available anymore. so will take the final model from two weeks ago.
