@@ -1,4 +1,18 @@
-# dataset analysis/calculations
+"""
+count the number of images in each class and the images ignored from 
+the dataset and create class balanced dataset then cread a bar graph and 
+plot the annotated images of the dataset, then augment and normalize every
+image in the dataset
+"""
+
+import csv
+import numpy as np
+import cv2
+import mediapipe as mp
+import matplotlib.pyplot as plt
+import math
+import tensorflow as tf
+
 
 categories_counts = {"0":0, "1":0, "2":0, "3":0, "4":0, "5":0, "6":0}
 skipped = {"0":0, "1":0, "2":0, "3":0, "4":0, "5":0, "6":0}

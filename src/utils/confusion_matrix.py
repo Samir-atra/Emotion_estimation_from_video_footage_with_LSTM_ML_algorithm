@@ -1,4 +1,9 @@
-# confusion matrix and error counting
+"""
+find the confusion matrix for the model trained and evaluated on the 
+test set
+"""
+import numpy as np
+import tensorflow as tf
 
 errors_count = {"0":0, "1":0, "2":0}
 ground_truth = []

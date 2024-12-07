@@ -1,4 +1,10 @@
-# cleaning the dataset 
+"""clean the dataset from images non-recognizable by mediapipe
+by checking for the mediapipe detector output if it does not exists
+the image get deleted"""
+
+import numpy as np
+import csv
+import cv2
 
 training_set = []
 validation_set = []

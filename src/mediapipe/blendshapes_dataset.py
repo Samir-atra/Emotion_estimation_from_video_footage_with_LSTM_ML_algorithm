@@ -1,4 +1,10 @@
-# creating blendshapes dataset        (styled)
+"""creat teh blendshapes dataset for the images dataset"""
+
+import csv
+import cv2
+import numpy as np
+import mediapipe as mp
+
 
 set = []
 images = []

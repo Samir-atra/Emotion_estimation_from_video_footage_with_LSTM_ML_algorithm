@@ -1,4 +1,10 @@
-# evaluate
+"""load the test set and evaluate the model on it"""
+
+import csv
+import numpy as np
+import tensorflow as tf
+
+
 model = tf.keras.models.load_model('/home/samer/Desktop/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/trained_models/epoch4437val_loss0.6506.keras')            # load the model to be evaluated
 tf.keras.utils.plot_model(model,                      # plot the model
     show_dtype=True,

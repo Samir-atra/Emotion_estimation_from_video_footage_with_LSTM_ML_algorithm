@@ -1,4 +1,7 @@
-# predict test classes to be used in further analysis
+"""pridict the class of a single image"""
+
+import numpy as np
+import tensorflow as tf
 
 # new_model = tf.keras.models.load_model('LSTM_model_73%_test_acc')
 predictions = []
