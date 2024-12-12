@@ -6,7 +6,6 @@ import cv2
 import numpy as np
 import mediapipe as mp
 
-
 def choosing_blendshapes(training_set_hus):
     # create a dictionary with numbers from 0 to 52 
     blend_shapes = dict()

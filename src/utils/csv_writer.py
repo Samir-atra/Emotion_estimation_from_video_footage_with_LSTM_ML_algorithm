@@ -4,7 +4,7 @@ import csv
 
 
 def csv_writer(filename, fields, data):
-
+    """create a csv file and write the given contents into it"""
     csvfile = filename
     fields = fields
     with open(csvfile, mode="a") as first:

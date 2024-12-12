@@ -5,7 +5,7 @@ add an index to the dataset to be processed and analyzed later for errors
 import cv2
 import numpy as np
 import csv
-import mediapipe as mp
+import mediapipe_tools as mp
 
 test_set_hus = []
 

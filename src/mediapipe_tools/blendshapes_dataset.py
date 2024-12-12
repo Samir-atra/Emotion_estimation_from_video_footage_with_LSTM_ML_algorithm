@@ -1,4 +1,4 @@
-"""creat teh blendshapes dataset for the images dataset"""
+"""create the blendshapes dataset for the images dataset"""
 
 import csv
 import cv2
