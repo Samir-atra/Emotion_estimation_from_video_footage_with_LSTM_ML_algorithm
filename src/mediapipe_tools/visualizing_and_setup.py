@@ -88,7 +88,8 @@ def plot_face_blendshapes_bar_graph(face_blendshapes):
 def detector():
     # Create an FaceLandmarker object.
     base_options = python.BaseOptions(
-      model_asset_path='/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/face_landmarker_v2_with_blendshapes.task'
+      model_asset_path='/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/face_landmarker_v2_with_blendshapes.task',
+      delegate=mp.tasks.BaseOptions.Delegate.GPU
       )
     options = vision.FaceLandmarkerOptions(base_options=base_options,
                                           output_face_blendshapes=True,
