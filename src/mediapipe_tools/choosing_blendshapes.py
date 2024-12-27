@@ -102,9 +102,9 @@ blends_to_print = [
 ]  # list of blendshapes indices that are most relevent
 
 
-if __name__ == "__main__":
-    dataset = balanced_dataset(
-        "/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/Datasets/fer2013.csv"
-    )
-    blendshapes = choosing_blendshapes(dataset)
-    print(blendshapes)
+# if __name__ == "__main__":
+#     dataset = balanced_dataset(
+#         "/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/Datasets/fer2013.csv"
+#     )
+#     blendshapes = choosing_blendshapes(dataset)
+#     print(blendshapes)

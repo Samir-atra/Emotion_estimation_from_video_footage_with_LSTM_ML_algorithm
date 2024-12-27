@@ -26,13 +26,20 @@ def list_creator(fullset):
     return training_set, validation_set, test_set
 
 
-def sets_cleaner(data_set):
+def sets_cleaner(data_set_path):
     """create three dataset with all images understandable by mediapipe"""
     data_set_hus = []
 
-    # append the understandable images of the original dataset splits to new lists
-    for lines in data_set:
-        image = str(lines[1]).split(" ")
+    data = tf.io.read_file(
+        "/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/Datasets/test_set_full.csv"
+    )  # open the dataset file
+    f = tf.strings.split(data, sep="\n")
+    for lines in f[1:-1]:  # loop throught the training instances
+        image = (
+            str(tf.strings.as_string(lines).numpy().decode("utf-8"))
+            .split(",")[1]
+            .split(" ")
+        )
         image = tf.convert_to_tensor(image)
         image = tf.make_tensor_proto(image, dtype=tf.uint8)
         image = tf.make_ndarray(image).reshape(48, 48, 1)
@@ -46,7 +53,7 @@ def sets_cleaner(data_set):
         if detection_result.face_blendshapes == []:
             continue
         else:
-            data_set_hus.append(lines)
+            data_set_hus.append(str(tf.strings.as_string(lines).numpy().decode("utf-8")).split(","))
 
     return data_set_hus
 

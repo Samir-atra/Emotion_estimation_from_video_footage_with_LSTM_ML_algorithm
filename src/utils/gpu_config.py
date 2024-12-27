@@ -6,8 +6,8 @@ import tensorflow as tf
 
 gpus = tf.config.list_physical_devices("GPU")
 tf.config.experimental.set_synchronous_execution(True)
+
 if gpus:
-    # Restrict TensorFlow to only allocate 1GB of memory on the first GPU
     try:
         tf.config.set_logical_device_configuration(
             gpus[0], [tf.config.LogicalDeviceConfiguration(memory_limit=3076)]

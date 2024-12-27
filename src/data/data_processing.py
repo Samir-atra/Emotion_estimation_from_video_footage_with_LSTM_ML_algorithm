@@ -59,9 +59,6 @@ def balanced_dataset(full_set_path):
     """
 
     fullset = []
-    Training_set = []
-    validation_set = []
-    test_set = []
     class_counter = {"0": 0, "1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0}
 
     with open(full_set_path, mode="r", encoding="utf-8") as data:
