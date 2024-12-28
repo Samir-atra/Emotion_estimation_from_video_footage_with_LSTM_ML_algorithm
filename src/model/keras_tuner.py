@@ -1,48 +1,114 @@
 """keras tuner for LSTM model experimenting on five hyperparameters """
 
-import tensorflow as tf
+import keras
 import keras_tuner
 
 
 def build_model(hp):
-  """build a compiled keras LSTM model and return it"""
-  
-  learning_rate = hp.Float("lr", min_value=1e-6, max_value=1e-3, sampling="log")       # learning rate search range
-  layer_u = hp.Int("lu", min_value=10, max_value=32, step=4)                           # layer units search range
-  kernel_r = hp.Float("kr", min_value=1e-10, max_value=1e-5, sampling="log")           # kernel regularization search range
-  acti_f = hp.Choice("af", ['selu', 'tanh', 'relu', 'leaky_relu'])                     # activation function search range
-  weight_d = hp.Float("wd", min_value=1e-10, max_value=0.0009, sampling="log")         # weight decay search range
-  
-# model structure
-  model = tf.keras.Sequential([
-      tf.keras.layers.LSTM(units = 34, activation = 'selu', return_sequences= True, kernel_regularizer=tf.keras.regularizers.L2(l2=0.00000195)),
-      tf.keras.layers.LSTM(units = 26, activation = acti_f, return_sequences= True, kernel_regularizer=tf.keras.regularizers.L2(l2=kernel_r)),
-      tf.keras.layers.LSTM(units = layer_u, activation = acti_f, return_sequences= True, kernel_regularizer=tf.keras.regularizers.L2(l2=kernel_r)),
-      tf.keras.layers.LSTM(units = layer_u, activation = acti_f, return_sequences= True, kernel_regularizer=tf.keras.regularizers.L2(l2=kernel_r)),
-      tf.keras.layers.LSTM(units = layer_u, activation = acti_f, return_sequences= True, kernel_regularizer=tf.keras.regularizers.L2(l2=kernel_r)),
-      tf.keras.layers.LSTM(units = layer_u, activation = acti_f, return_sequences= True, kernel_regularizer=tf.keras.regularizers.L2(l2=kernel_r)),
-      tf.keras.layers.LSTM(units = 30, activation = acti_f, return_sequences= False, kernel_regularizer=tf.keras.regularizers.L2(l2=0.00000195)),
-      tf.keras.layers.Dense(units = 3, activation = 'softmax'),
-  ])
-  
-# Compiling the model
-  model.compile(loss=tf.keras.losses.CategoricalCrossentropy(),
-              optimizer= tf.keras.optimizers.Adam(learning_rate = learning_rate, global_clipnorm=1, amsgrad = True, weight_decay=weight_d),
-              metrics = [tf.keras.metrics.CategoricalCrossentropy(), tf.keras.metrics.CategoricalAccuracy(), tf.keras.metrics.F1Score()])
+    """
+    build a compiled keras LSTM model with ranges of hyperparameters to be experimented on
 
-  return model 
+    Args:
+        hp (keras_tuner.HyperParameters): keras tuner function to run the experiments
+
+    Returns:
+        model (keras.model): the compiled LSTM model with keras_tuner hyperparameters
+    """
+
+    # hyper parameters ranges for tuning
+    learning_rate = hp.Float("lr", min_value=1e-6, max_value=1e-3, sampling="log")
+    layer_u = hp.Int("lu", min_value=10, max_value=32, step=4)
+    kernel_r = hp.Float("kr", min_value=1e-10, max_value=1e-5, sampling="log")
+    acti_f = hp.Choice("af", ["selu", "tanh", "relu", "leaky_relu"])
+    weight_d = hp.Float("wd", min_value=1e-10, max_value=0.0009, sampling="log")
+
+    # model structure
+    model = keras.Sequential(
+        [
+            keras.layers.LSTM(
+                units=34,
+                activation="selu",
+                return_sequences=True,
+                kernel_regularizer=keras.regularizers.L2(l2=0.00000195),
+            ),
+            keras.layers.LSTM(
+                units=26,
+                activation=acti_f,
+                return_sequences=True,
+                kernel_regularizer=keras.regularizers.L2(l2=kernel_r),
+            ),
+            keras.layers.LSTM(
+                units=layer_u,
+                activation=acti_f,
+                return_sequences=True,
+                kernel_regularizer=keras.regularizers.L2(l2=kernel_r),
+            ),
+            keras.layers.LSTM(
+                units=layer_u,
+                activation=acti_f,
+                return_sequences=True,
+                kernel_regularizer=keras.regularizers.L2(l2=kernel_r),
+            ),
+            keras.layers.LSTM(
+                units=layer_u,
+                activation=acti_f,
+                return_sequences=True,
+                kernel_regularizer=keras.regularizers.L2(l2=kernel_r),
+            ),
+            keras.layers.LSTM(
+                units=layer_u,
+                activation=acti_f,
+                return_sequences=True,
+                kernel_regularizer=keras.regularizers.L2(l2=kernel_r),
+            ),
+            keras.layers.LSTM(
+                units=30,
+                activation=acti_f,
+                return_sequences=False,
+                kernel_regularizer=keras.regularizers.L2(l2=0.00000195),
+            ),
+            keras.layers.Dense(units=3, activation="softmax"),
+        ]
+    )
+
+    # Compiling the model
+    model.compile(
+        loss=keras.losses.CategoricalCrossentropy(),
+        optimizer=keras.optimizers.Adam(
+            learning_rate=learning_rate,
+            global_clipnorm=1,
+            amsgrad=True,
+            weight_decay=weight_d,
+        ),
+        metrics=[
+            keras.metrics.CategoricalCrossentropy(),
+            keras.metrics.CategoricalAccuracy(),
+            keras.metrics.F1Score(),
+        ],
+    )
+
+    return model
 
 
-def experimenting(X_train, Y_train, X_val, y_val):
-    """run keras tuner experiments for the model built using build_model 
-    using random search"""
-    
+def experimenting(x_train, y_train, x_val, y_val):
+    """
+    run keras tuner experiments for the model built using build_model
+    using random search
+
+    Args:
+        x_train (np.array): the blendshapes of the training set
+        y_train (np.array): the labels of the training set
+        x_val (np.array): the blendshapes of the validation set
+        y_val (np.array): the labels of the validation set
+
+    """
+
     build_model(keras_tuner.HyperParameters())
 
-    tuner = keras_tuner.RandomSearch(                               # tuner configurations
+    tuner = keras_tuner.RandomSearch(
         hypermodel=build_model,
         max_trials=15,
-        objective=keras_tuner.Objective('val_loss', 'min'),
+        objective=keras_tuner.Objective("val_loss", "min"),
         executions_per_trial=1,
         overwrite=True,
         directory="/home/samer/Desktop/Big data Small Data/BDSD/Minor_project/emotion_estimation/",
@@ -51,6 +117,8 @@ def experimenting(X_train, Y_train, X_val, y_val):
 
     tuner.search_space_summary()
 
-    tuner.search(x=X_train, y=Y_train, validation_data = (X_val,y_val), epochs=100, batch_size = 150)
+    tuner.search(
+        x=x_train, y=y_train, validation_data=(x_val, y_val), epochs=100, batch_size=150
+    )
 
     tuner.results_summary()

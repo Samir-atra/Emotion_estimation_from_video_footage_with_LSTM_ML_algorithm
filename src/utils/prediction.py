@@ -1,14 +1,25 @@
 """pridict the class of a single image"""
 
 import numpy as np
-import tensorflow as tf
+import keras
 
-# new_model = tf.keras.models.load_model('LSTM_model_73%_test_acc')
-predictions = []
-for inst in X_test:
-    inst = np.array(inst, dtype=np.float64)
-    inst = np.reshape(inst, (1,52,1))
 
-    y_pred = model.predict(inst, verbose=0)
-    y_pred = np.argmax(y_pred)
-    predictions.append(y_pred)
+def generate_prediction(x_test):
+    """use a saved model to generate predictions to the test set
+
+    Args:
+        x_test (list): the blendshapes of the test set
+
+    Returns:
+        predictions (list): the predicted classes of the test set
+    """
+    model = keras.models.load_model("LSTM_model_73%_test_acc")
+    predictions = []
+    for inst in x_test:
+        inst = np.array(inst, dtype=np.float64)
+        inst = np.reshape(inst, (1, 52, 1))
+
+        y_pred = model.predict(inst, verbose=0)
+        y_pred = np.argmax(y_pred)
+        predictions.append(y_pred)
+    return predictions

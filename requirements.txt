@@ -1,5 +1,0 @@
-mediapipe
-opencv-python
-pandas
-tensorflow
-keras-tuner
