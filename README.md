@@ -1,6 +1,6 @@
 # Emotion estimation from camera footage with LSTM
 
-The code for the research paper: (Not published yet)
+The code for the research paper: [Emotion estimation from video footage with LSTM](https://www.researchgate.net/publication/387438191_EMOTION_ESTIMATION_FROM_VIDEO_FOOTAGE_WITH_LSTM)
 
 ## Introduction
 
