@@ -34,6 +34,6 @@ Adding the code location to the python path.
 - Download the dataset from https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/data
 - Then process the dataset and load it train the model then evaluate.
 
-## Reference:
+## Reference
 
 Samer Attrah. (2025). FER2013 blendshapes dataset example (Partial) [Data set]. Kaggle. https://doi.org/10.34740/KAGGLE/DSV/10716347
