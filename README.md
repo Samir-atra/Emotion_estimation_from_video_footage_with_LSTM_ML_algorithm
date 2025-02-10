@@ -2,6 +2,8 @@
 
 The code for the research paper: [Emotion estimation from video footage with LSTM](https://www.researchgate.net/publication/387438191_EMOTION_ESTIMATION_FROM_VIDEO_FOOTAGE_WITH_LSTM)
 
+Blendshapes dataset mentioned in the paper: [Blendshapes dataset](https://doi.org/10.34740/KAGGLE/DSV/10716347)
+
 ## Introduction
 
 To use this repository start by:
@@ -31,3 +33,6 @@ Adding the code location to the python path.
 
 - Download the dataset from https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/data
 - Then process the dataset and load it train the model then evaluate.
+
+Reference:
+Samer Attrah. (2025). FER2013 blendshapes dataset example (Partial) [Data set]. Kaggle. https://doi.org/10.34740/KAGGLE/DSV/10716347
