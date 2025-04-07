@@ -31,11 +31,11 @@ export PYTHONPATH=$PYTHONPATH:"<path to the src directory on the machine>"
 ```
 Adding the code location to the python path.
 
-- Download the dataset from https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/data
+- Download the FER2013 dataset from https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/data
 - Then process the dataset and load it train the model then evaluate.
 
 Or you can download the blendshapes dataset from: https://www.kaggle.com/datasets/samerattrah/fer2013-blendshapes-dataset-example-partial
-and might use the pre-trained LSTM model which you can find at: https://drive.google.com/file/d/1QJteY_p16bHvs9FvR82IVQASx7qTzzfG/view?usp=sharing
+and might use the pre-trained LSTM model which you can find at: https://huggingface.co/SamerAttrah/Emotion_estimation_from_video_footage_with_LSTM/resolve/main/epoch4437val_loss0.6506.keras
 
 ## Reference
 
