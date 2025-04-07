@@ -35,6 +35,7 @@ Adding the code location to the python path.
 - Then process the dataset and load it train the model then evaluate.
 
 Or you can download the blendshapes dataset from: https://www.kaggle.com/datasets/samerattrah/fer2013-blendshapes-dataset-example-partial
+
 and might use the pre-trained LSTM model which you can find at: https://huggingface.co/SamerAttrah/Emotion_estimation_from_video_footage_with_LSTM/resolve/main/epoch4437val_loss0.6506.keras
 
 ## Reference
