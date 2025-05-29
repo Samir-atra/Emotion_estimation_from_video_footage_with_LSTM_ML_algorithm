@@ -6,13 +6,9 @@ Blendshapes dataset mentioned in the paper: [Blendshapes dataset](https://doi.or
 
 ## Introduction
 
-To use this repository start by:
+To use this repository for replicating some of the processes described in the paper, start by:
 - Cloning the repository on the local machine
-- Creating the conda environment in 
-
-```bash
-environment.yml
-```
+- Creating the conda environment with suitable versions, where the program was built partially on Keras 2.X and other on Keras 3.X.
 
 Then
 - Running the commands in the script one at a time in the command line
@@ -24,19 +20,14 @@ To download the mediapipe task for the face landmark detection
 ```bash
 wget -q -O image.png https://storage.googleapis.com/mediapipe-assets/business-person.png
 ```
-To download a sample image to testing and visualizing the blendshapes
-
-```bash
-export PYTHONPATH=$PYTHONPATH:"<path to the src directory on the machine>"
-```
-Adding the code location to the python path.
+To download a sample image for testing and visualizing the blendshapes
 
 - Download the FER2013 dataset from https://www.kaggle.com/c/challenges-in-representation-learning-facial-expression-recognition-challenge/data
-- Then process the dataset and load it train the model then evaluate.
+- Then process the dataset and load it, train the model then evaluate.
 
 Or you can download the blendshapes dataset from: https://www.kaggle.com/datasets/samerattrah/fer2013-blendshapes-dataset-example-partial
 
-and might use the pre-trained LSTM model which you can find at: https://huggingface.co/SamerAttrah/Emotion_estimation_from_video_footage_with_LSTM/resolve/main/epoch4437val_loss0.6506.keras
+and might use the pre-trained LSTM model, which you can find at: https://huggingface.co/SamerAttrah/Emotion_estimation_from_video_footage_with_LSTM/resolve/main/epoch4437val_loss0.6506.keras
 
 ## Reference
 
