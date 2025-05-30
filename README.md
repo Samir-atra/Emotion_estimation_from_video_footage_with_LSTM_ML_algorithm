@@ -44,6 +44,7 @@ Thanks to professor Marijn Jongerden, Jeroen Veen and Dixon Devasia for their he
 
 ## Citation
 If you use this project in your research, please cite it as follows:
+
 Attrah S. Emotion estimation from video footage with LSTM. arXiv preprint arXiv:2501.13432. 2025 Jan 23.
 
 ```bibtex
