@@ -1,6 +1,11 @@
 # Emotion estimation from camera footage with LSTM
 
-The code for the research paper: [Emotion estimation from video footage with LSTM](https://www.researchgate.net/publication/387438191_EMOTION_ESTIMATION_FROM_VIDEO_FOOTAGE_WITH_LSTM)
+## Author
+Samer Attrah (Hogeschool van Arnhem en Nijmegen)
+
+## Overview
+
+The code in this repository is for the research paper: [Emotion estimation from video footage with LSTM](https://www.researchgate.net/publication/387438191_EMOTION_ESTIMATION_FROM_VIDEO_FOOTAGE_WITH_LSTM)
 
 Blendshapes dataset mentioned in the paper: [Blendshapes dataset](https://doi.org/10.34740/KAGGLE/DSV/10716347)
 
@@ -32,3 +37,19 @@ and might use the pre-trained LSTM model, which you can find at: https://hugging
 ## Reference
 
 Samer Attrah. (2025). FER2013 blendshapes dataset example (Partial) [Data set]. Kaggle. https://doi.org/10.34740/KAGGLE/DSV/10716347
+
+## Acknowledgement
+
+Thanks to professor Marijn Jongerden, Jeroen Veen and Dixon Devasia for their help and guidance along the way, and thanks to Victor Hogeweij for his contribution to the Gaze project. Also, thanks Bhupinder Kaur, An Le, and Muhammad Reza for their insight and support at the early stages of the work.
+
+## Citation
+If you use this project in your research, please cite it as follows:
+Attrah S. Emotion estimation from video footage with LSTM. arXiv preprint arXiv:2501.13432. 2025 Jan 23.
+
+'''bibtex
+@article{attrah2025emotion,
+  title={Emotion estimation from video footage with LSTM},
+  author={Attrah, Samer},
+  journal={arXiv preprint arXiv:2501.13432},
+  year={2025}
+}
