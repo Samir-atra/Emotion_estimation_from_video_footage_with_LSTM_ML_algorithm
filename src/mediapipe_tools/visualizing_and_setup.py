@@ -16,7 +16,8 @@ from mediapipe.framework.formats import landmark_pb2
 
 
 def draw_landmarks_on_image(rgb_image, detection_result):
-    """detect and draw landmarks on a single image"""
+    """detect and draw landmarks on a single image for more info: 
+    https://colab.research.google.com/github/googlesamples/mediapipe/blob/main/examples/face_landmarker/python/%5BMediaPipe_Python_Tasks%5D_Face_Landmarker.ipynb"""
     
     face_landmarks_list = detection_result.face_landmarks
     annotated_image = tf.keras.ops.copy(rgb_image).numpy()

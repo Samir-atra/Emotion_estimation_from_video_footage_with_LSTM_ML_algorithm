@@ -7,7 +7,7 @@ import mediapipe as mp
 from data.data_processing import balanced_dataset
 from mediapipe_tools.visualizing_and_setup import detector
 
-
+# configure the gpu to use a bigger portion of the memory for processing the data
 gpus = tf.config.list_physical_devices("GPU")
 tf.config.experimental.set_synchronous_execution(True)
 if gpus:
@@ -44,6 +44,7 @@ def choosing_blendshapes(training_set_hus):
     for i in range(len(training_set_hus)):
         image = str(training_set_hus[i][1]).split(" ")
         image = tf.convert_to_tensor(image)
+        # serialize the tensor to be oricessed into a numpy array and reshaped
         image = tf.make_tensor_proto(image, dtype=tf.uint8)
         image = tf.make_ndarray(image).reshape(48, 48, 1)
         image = tf.convert_to_tensor(image, dtype=tf.uint8)

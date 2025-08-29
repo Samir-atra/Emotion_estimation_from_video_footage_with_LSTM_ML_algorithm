@@ -28,6 +28,7 @@ with open(
     for lines in csvFile:
         set.append(lines)
     for i in range(len(set) - 1):
+        # iterate on each image pixels of the dataset to be converted into an rgb image
         image = np.array(set[i][1].split()).reshape(48, 48, 1).astype(np.uint8)
         image = tf.convert_to_tensor(image)
         image = tf.make_tensor_proto(image, dtype=tf.uint8)
@@ -38,7 +39,7 @@ with open(
         labels.append(int(set[i][0]))
         # indices.append(int(set[i][2]))
 
-
+# the important blends according to the ablation studies in the research paper
 blends_to_print = [
     "1",
     "2",
