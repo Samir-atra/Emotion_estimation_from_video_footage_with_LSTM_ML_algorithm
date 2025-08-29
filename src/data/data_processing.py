@@ -15,13 +15,17 @@ def categories_and_unreadable_counter(fer2013_path):
     counts the number of images in each class in one dictionary and
     the number of the images unreadable by mediapipe in another dictionary
     """
+    # create dictionaries for the counting of the classes of the dataset 
+    # and another for the images that are not readable by mediapipe
     categories_counts = {"0": 0, "1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0}
     skipped = {"0": 0, "1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0}
 
     data = tf.io.read_file(fer2013_path)  # open the dataset file
+    # break down the dataset into lines, to have the rows separated
     f = tf.strings.split(data, sep="\n")
     for lines in f[1:-1]:  # loop throught the training instances
-        print(type(lines))
+        # print(type(lines))  # a debigging step
+        # extract the dictionary keys (labels) from the dataset 
         key = str(tf.strings.as_string(lines).numpy().decode("utf-8")).split(",")[0]
         if key in categories_counts.keys():
             categories_counts[key] = categories_counts[key] + 1
@@ -29,7 +33,10 @@ def categories_and_unreadable_counter(fer2013_path):
             str(tf.strings.as_string(lines).numpy().decode("utf-8"))
             .split(",")[1]
             .split(" ")
-        )
+        ) # process the string of pixels into the image
+        
+        # indirectly related steps to the process of checking the readablility of the images
+        # then process the images with mediapipe detector 
         image = tf.convert_to_tensor(image)
         image = tf.make_tensor_proto(image, dtype=tf.uint8)
         image = tf.make_ndarray(image).reshape(48, 48, 1)

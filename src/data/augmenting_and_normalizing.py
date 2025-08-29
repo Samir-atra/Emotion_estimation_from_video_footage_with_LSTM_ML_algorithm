@@ -52,10 +52,10 @@ def augmentation_models():
       rescaling2: A sequential model for scaling up pixel values
       augment: A sequential model for image augmentation
     """
-    rescaling1 = tf.keras.Sequential([tf.keras.layers.Rescaling(1.0 / 255)])
+    rescaling1 = tf.keras.Sequential([tf.keras.layers.Rescaling(1.0 / 255)])     # scale the image down
 
-    rescaling2 = tf.keras.Sequential([tf.keras.layers.Rescaling(1.0 * 255)])
-
+    rescaling2 = tf.keras.Sequential([tf.keras.layers.Rescaling(1.0 * 255)])     # scale the image up
+    # apply horizontal flip and random rotation to the image
     augment = tf.keras.Sequential(
         [tf.keras.layers.RandomFlip("horizontal"), tf.keras.layers.RandomRotation(0.1)]
     )
@@ -64,7 +64,9 @@ def augmentation_models():
 
 def augment_images(training_images, training_labels, rescaling1, rescaling2, augment):
     """
-    augments the images in the training set.
+    augments the images in the training set while taking a non-optimal ay for, 
+    processing them and checking their calidity to be detected by mediapipefor more check the blog: 
+    https://medium.com/@samiratra95/image-augmentation-using-tensorflow-and-mediapipe-baf54651f9fc
 
     Args:
         training_images (list): the training set images
@@ -81,17 +83,20 @@ def augment_images(training_images, training_labels, rescaling1, rescaling2, aug
         img = training_images[ele]
         label = training_labels[ele]
         image = rescaling1(img)
-        aug_image = augment(image)
+        aug_image = augment(image)         # apply augmentations on the image
         aug_image = rescaling2(aug_image)
-        aug_image = tf.cast(aug_image, tf.uint8)
+        aug_image = tf.cast(aug_image, tf.uint8)        # cast the pixels values into integers
         aug_image = np.array(aug_image)
         flatten_image = (
             aug_image.flatten()
-        )  # flatten the augmented image, to be used in creating the csv file
+        )  
+        # flatten the augmented image, to be used in creating the csv file
         flat_aug_image = [flatten_image[i] for i in range(0, len(flatten_image))]
         frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=aug_image)
         detection_result = detector()
-        detection_result = detection_result.detect(frame)
+        
+        # check if the face in the image are detectable with mediapipe
+        detection_result = detection_result.detect(frame) 
         if detection_result.face_blendshapes == []:
             continue
         else:
@@ -113,6 +118,9 @@ def augment_images(training_images, training_labels, rescaling1, rescaling2, aug
 def normalize(x_train, x_val):
     """
     Normalizes the images of the dataset, and find the mean and standard deviation.
+    for the normalization layer the mean and standard diviation were found using the 
+    adapt function instead of finding the mean and standard deviation manually.
+
 
     Args:
         X_train (list): the training set
@@ -123,8 +131,8 @@ def normalize(x_train, x_val):
         NX_val (list): normalized validation set
     """
 
-    mean = tf.math.reduce_mean(x_train, axis=0)
-    stddev = tf.math.reduce_std(x_train, axis=0)
+    mean = tf.math.reduce_mean(x_train, axis=0)            # find the mean of the dataset for the normalization layer
+    stddev = tf.math.reduce_std(x_train, axis=0)          # find the standard deviation
     mean = np.array(mean).T
     stddev = np.array(stddev).T
 

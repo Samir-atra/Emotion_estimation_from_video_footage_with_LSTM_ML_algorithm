@@ -12,16 +12,18 @@ from data_processing import balanced_dataset
 # creat lists for dataset splits
 def list_creator(fullset):
     """create the three sets lists from the full samples list"""
+    # initialize empty sets for the splits of te dataset
     training_set = []
     validation_set = []
     test_set = []
     for i in fullset:
-        if i[2] == "Training":
+        if i[2] == "Training":                # create the training split
             training_set.append(i)
-        elif i[2] == "PublicTest":
+        elif i[2] == "PublicTest":            # create the validation split
             validation_set.append(i)
-        elif i[2] == "PrivateTest":
-            test_set.append(i)
+        elif i[2] == "PrivateTest":           
+            test_set.append(i)                # create the test split
+
 
     return training_set, validation_set, test_set
 
@@ -40,6 +42,10 @@ def sets_cleaner(data_set_path):
             .split(",")[1]
             .split(" ")
         )
+        # indirectly related steps to the process of checking the readablility of the images by  
+        # mediapipe, the steps are necessary and could not find a shorter way but they are time 
+        # but although tensorflow is much faster than numpy or other libraries which would have
+        # needed one or two lines of code. for more: https://medium.com/@samiratra95/image-augmentation-using-tensorflow-and-mediapipe-baf54651f9fc
         image = tf.convert_to_tensor(image)
         image = tf.make_tensor_proto(image, dtype=tf.uint8)
         image = tf.make_ndarray(image).reshape(48, 48, 1)
