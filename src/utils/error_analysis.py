@@ -26,15 +26,15 @@ def count_visualize_errors(x_test):
     test_blend_set = []
     test_index_set = []
 
-    with open("test_set_full_index.csv", mode="r", encoding="utf-8") as test_data:
+    with open("test_set_full_index.csv", mode="r", encoding="utf-8") as test_data:   # open the csv file
         csvfile = csv.reader(test_data)
         next(csvfile)
         for lines in csvfile:
             test_blend_set.append(lines[0:52])
 
         for j in range(len(test_blend_set)):
-            if predictions[j] != ground_truth[j]:
-                errors.append(test_index_set[j])
+            if predictions[j] != ground_truth[j]:        # compare the predicted value of the label to the ground truth value
+                errors.append(test_index_set[j])       # create a list with the indecies of the mispredicted images
 
         for ind in errors:
             imageee = (
@@ -46,7 +46,7 @@ def count_visualize_errors(x_test):
             frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=imageees)
             detection_result = detector()
             detection_result = detection_result.detect(frame)
-            annotated_image = draw_landmarks_on_image(
+            annotated_image = draw_landmarks_on_image(         # draw landmarks on the image
                 frame.numpy_view(), detection_result
             )
             plt.imshow(annotated_image)
@@ -70,7 +70,7 @@ def create_classes_corrcoef(traindata):
     class2 = []
     class3 = []
 
-    for ins in traindata:
+    for ins in traindata:       # create lists for the dataset classes 
         if float(ins[52]) == 0:
             class1.append(ins)
         elif float(ins[52]) == 1:
@@ -83,9 +83,9 @@ def create_classes_corrcoef(traindata):
     csv_writer("class3.csv", "beedoo", class3)
 
     plt.figure(figsize=[40, 40])
-    y = np.linspace(0, 1999, 1999)
+    y = np.linspace(0, 1999, 1999)    # generate the y-axis values to be ploted against the class values on the x-axis
     for j in range(1, 52):
-        plt.subplot(10, 6, j)
+        plt.subplot(10, 6, j)         # create subplots for the three classes
         class1_slice = [float(i[j]) for i in class1[1:2000]]
         class2_slice = [float(i[j]) for i in class2[1:2000]]
         class3_slice = [float(i[j]) for i in class3[1:2000]]
@@ -94,5 +94,5 @@ def create_classes_corrcoef(traindata):
     plt.scatter(y, class2_slice, color="red")
     plt.scatter(y, class3_slice, color="green")
     print(class1[1:100])
-    corr_mat = np.corrcoef(class1_slice, class2_slice)
+    corr_mat = np.corrcoef(class1_slice, class2_slice)     # calculate the correlation coefficient
     print(corr_mat)

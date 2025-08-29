@@ -5,12 +5,12 @@ configures a logical GPU memory minimum limit and enable synchronous execution
 import tensorflow as tf
 
 gpus = tf.config.list_physical_devices("GPU")
-tf.config.experimental.set_synchronous_execution(True)
+tf.config.experimental.set_synchronous_execution(True)    # enable synchronous execution
 
 if gpus:
     try:
         tf.config.set_logical_device_configuration(
-            gpus[0], [tf.config.LogicalDeviceConfiguration(memory_limit=3076)]
+            gpus[0], [tf.config.LogicalDeviceConfiguration(memory_limit=3076)]    # adjust the allocated GPU-RAM to the program execution 
         )
         logical_gpus = tf.config.list_logical_devices("GPU")
         print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")

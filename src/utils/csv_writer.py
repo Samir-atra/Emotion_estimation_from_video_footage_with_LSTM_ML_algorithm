@@ -9,7 +9,7 @@ def csv_writer(filename, fields, data):
     fields = fields
     with open(csvfile, mode="a", encoding="utf-8") as first:
         csvwriter = csv.writer(first)
-        csvwriter.writerow(fields)
-        csvwriter.writerows(data)
+        csvwriter.writerow(fields)        # write the header of the csv file
+        csvwriter.writerows(data)        # write the rows of the file
 
         return True

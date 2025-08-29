@@ -27,9 +27,9 @@ def plot_confusion_matrix(test_labels_set, test_blend_set, test_index_set, predi
         i = np.argmax(i)
         ground_truth.append(i)
     for j in range(len(test_blend_set)):
-        if predictions[j] != ground_truth[j]:
+        if predictions[j] != ground_truth[j]:     # check if the predicted label for the image is equal to the ground truth label.
             errors.append(test_index_set[j])
-    confusion_matrix = tf.math.confusion_matrix(
+    confusion_matrix = tf.math.confusion_matrix(      # create the confusion matrix
         ground_truth,
         predictions,
         num_classes=3,
