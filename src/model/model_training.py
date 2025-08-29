@@ -1,5 +1,7 @@
-"""LSTM model fitting using a manually built model 
-with compiling and checkpoints"""
+"""
+LSTM model fitting using a manually built model 
+with compiling and checkpoints
+"""
 
 
 import keras
@@ -8,7 +10,7 @@ import keras
 
 def train_model(x_train, y_train, x_val, y_val):
     """train the model for manually set hyperparameters"""
-    # LSTM model final structure experimented with
+    # LSTM model final structure experimented with and found using the keras tuner
     model = keras.Sequential(
         [
             keras.layers.LSTM(
@@ -38,7 +40,7 @@ def train_model(x_train, y_train, x_val, y_val):
             keras.layers.Dense(units=3, activation="softmax"),
         ]
     )
-
+    # compile the model
     model.compile(
         loss=keras.losses.CategoricalCrossentropy(),
         optimizer=keras.optimizers.AdamW(
@@ -59,14 +61,15 @@ def train_model(x_train, y_train, x_val, y_val):
     model_checkpoint_callback = (
         keras.callbacks.ModelCheckpoint(  # model checkpoint callback
             filepath=checkpoint_filepath,
-            monitor="val_loss",
-            mode="min",
+            monitor="val_loss",      # the check point takes the validation loss as main metric for preference
+            mode="min",          # the best model checkpoint is the one with minimum validation loss
             save_best_only=True,
             verbose=0,
         )
     )
 
-    # earlystopping callback
+    # earlystopping callback stops the training after NOT having any 
+    # improvment of 0.0001 in the categorical cross entropy for 500 epochs 
     early_stop = keras.callbacks.EarlyStopping(
         monitor="categorical_crossentropy",
         mode="min",
@@ -92,8 +95,8 @@ def train_model(x_train, y_train, x_val, y_val):
         batch_size=150,
         verbose=2,
         class_weight=class_weight,
-        callbacks=[model_checkpoint_callback, early_stop],
+        callbacks=[model_checkpoint_callback, early_stop],   # use the callbaacks model checkpoint and early stop
     )
-    keras.utils.plot_model(model, show_shapes=True, rankdir="LR")
+    keras.utils.plot_model(model, show_shapes=True, rankdir="LR")     # plot the model structure
 
     return model

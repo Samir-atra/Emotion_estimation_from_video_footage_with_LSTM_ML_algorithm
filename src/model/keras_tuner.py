@@ -16,11 +16,12 @@ def build_model(hp):
     """
 
     # hyper parameters ranges for tuning
-    learning_rate = hp.Float("lr", min_value=1e-6, max_value=1e-3, sampling="log")
-    layer_u = hp.Int("lu", min_value=10, max_value=32, step=4)
-    kernel_r = hp.Float("kr", min_value=1e-10, max_value=1e-5, sampling="log")
-    acti_f = hp.Choice("af", ["selu", "tanh", "relu", "leaky_relu"])
-    weight_d = hp.Float("wd", min_value=1e-10, max_value=0.0009, sampling="log")
+    learning_rate = hp.Float("lr", min_value=1e-6, max_value=1e-3, sampling="log")    # set the learning rate search space
+    layer_u = hp.Int("lu", min_value=10, max_value=32, step=4)                  # create the limits of the search space of the layer's units
+    kernel_r = hp.Float("kr", min_value=1e-10, max_value=1e-5, sampling="log")    # set the kernel regularization limits search space limits
+    acti_f = hp.Choice("af", ["selu", "tanh", "relu", "leaky_relu"])       # set the choices of the activation function search space
+    weight_d = hp.Float("wd", min_value=1e-10, max_value=0.0009, sampling="log")    # set the weight decay search space limits
+
 
     # model structure
     model = keras.Sequential(
@@ -105,10 +106,10 @@ def experimenting(x_train, y_train, x_val, y_val):
 
     build_model(keras_tuner.HyperParameters())
 
-    tuner = keras_tuner.RandomSearch(
+    tuner = keras_tuner.RandomSearch(                  # using the random search algorithm to choose the values to the experiments
         hypermodel=build_model,
         max_trials=15,
-        objective=keras_tuner.Objective("val_loss", "min"),
+        objective=keras_tuner.Objective("val_loss", "min"),   # conduct the experiments to minimize the validation loss
         executions_per_trial=1,
         overwrite=True,
         directory="/home/samer/Desktop/Big data Small Data/BDSD/Minor_project/emotion_estimation/",
@@ -119,6 +120,6 @@ def experimenting(x_train, y_train, x_val, y_val):
 
     tuner.search(
         x=x_train, y=y_train, validation_data=(x_val, y_val), epochs=100, batch_size=150
-    )
+    )  # run the search experiments
 
     tuner.results_summary()
