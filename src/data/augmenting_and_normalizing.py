@@ -10,11 +10,13 @@ import mediapipe as mp
 from utils.csv_writer import csv_writer
 from data.data_cleaning import sets_cleaner
 from mediapipe_tools.visualizing_and_setup import detector
+from dotenv import load_dotenv
+import os
+import sys
 
+load_dotenv()
 
-training_set_hus = sets_cleaner(
-    "/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/Datasets/training_set_full.csv"
-)
+training_set_hus = sets_cleaner(os.getenv("TRAIN_DATASET"))
 
 
 def augment_load_data(training_set_hus):

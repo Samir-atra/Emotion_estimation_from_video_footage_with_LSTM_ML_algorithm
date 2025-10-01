@@ -2,7 +2,17 @@
 
 import keras
 import keras_tuner
+from dotenv import load_dotenv
+import os
+import sys
 
+# Add the 'src' directory to the Python path to resolve module imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Load environment variables from .env file
+load_dotenv()
+
+from data.data_loading import load_training_data, load_validation
 
 def build_model(hp):
     """
@@ -106,13 +116,14 @@ def experimenting(x_train, y_train, x_val, y_val):
 
     build_model(keras_tuner.HyperParameters())
 
+
     tuner = keras_tuner.RandomSearch(                  # using the random search algorithm to choose the values to the experiments
         hypermodel=build_model,
         max_trials=15,
         objective=keras_tuner.Objective("val_loss", "min"),   # conduct the experiments to minimize the validation loss
         executions_per_trial=1,
         overwrite=True,
-        directory="/home/samer/Desktop/Big data Small Data/BDSD/Minor_project/emotion_estimation/",
+        directory=os.getenv("KERAS_TUNER_EXPERIMENTS_DIR"),
         project_name="Emotion_estimation_tuning",
     )
 
@@ -123,3 +134,10 @@ def experimenting(x_train, y_train, x_val, y_val):
     )  # run the search experiments
 
     tuner.results_summary()
+
+
+if __name__ == "__main__":
+    # Load training and validation data
+    x_train, y_train = load_training_data()
+    x_val, y_val = load_validation()
+    experimenting(x_train, y_train, x_val, y_val)

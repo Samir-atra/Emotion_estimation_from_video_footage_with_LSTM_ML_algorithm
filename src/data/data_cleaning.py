@@ -7,7 +7,11 @@ import mediapipe as mp
 from mediapipe_tools.visualizing_and_setup import detector
 from utils.csv_writer import csv_writer
 from data_processing import balanced_dataset
+from dotenv import load_dotenv
+import os
+import sys
 
+load_dotenv()
 
 # creat lists for dataset splits
 def list_creator(fullset):
@@ -32,8 +36,7 @@ def sets_cleaner(data_set_path):
     """create three dataset with all images understandable by mediapipe"""
     data_set_hus = []
 
-    data = tf.io.read_file(
-        "/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/Datasets/test_set_full.csv"
+    data = tf.io.read_file(os.getenv("TEST_DATASET")
     )  # open the dataset file
     f = tf.strings.split(data, sep="\n")
     for lines in f[1:-1]:  # loop throught the training instances

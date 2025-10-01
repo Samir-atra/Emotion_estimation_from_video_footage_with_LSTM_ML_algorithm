@@ -1,11 +1,18 @@
-"""choosing relevant blendshapes for the happy, sad dataset and the 
-happy, sad, neutral dataset"""
+"""
+choosing relevant blendshapes for the happy, sad dataset and the 
+happy, sad, neutral dataset
+"""
 
 import time
 import tensorflow as tf
 import mediapipe as mp
 from data.data_processing import balanced_dataset
 from mediapipe_tools.visualizing_and_setup import detector
+from dotenv import load_dotenv
+import os
+import sys
+
+load_dotenv()
 
 # configure the gpu to use a bigger portion of the memory for processing the data
 gpus = tf.config.list_physical_devices("GPU")
@@ -104,8 +111,7 @@ blends_to_print = [
 
 
 # if __name__ == "__main__":
-#     dataset = balanced_dataset(
-#         "/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/Datasets/fer2013.csv"
+#     dataset = balanced_dataset(os.getenv("FER2013")
 #     )
 #     blendshapes = choosing_blendshapes(dataset)
 #     print(blendshapes)

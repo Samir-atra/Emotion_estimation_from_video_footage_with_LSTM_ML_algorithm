@@ -10,7 +10,11 @@ import tensorflow as tf
 import mediapipe as mp
 from mediapipe_tools.visualizing_and_setup import detector
 from utils.csv_writer import csv_writer
+from dotenv import load_dotenv
+import os
+import sys
 
+load_dotenv()
 
 set = []
 images = []
@@ -19,8 +23,7 @@ full_set = []
 indices = []
 
 
-with open(
-    "/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/Datasets/validation_set_full.csv",
+with open(os.getenv("VAL_DATASET"),
     mode="r",
 ) as data:  # load the dataset that will be processed
     csvFile = csv.reader(data)

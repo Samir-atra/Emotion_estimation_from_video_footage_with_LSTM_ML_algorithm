@@ -13,11 +13,17 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
+from dotenv import load_dotenv
+import os
+import sys
 
+load_dotenv()
 
 def draw_landmarks_on_image(rgb_image, detection_result):
-    """detect and draw landmarks on a single image for more info: 
-    https://colab.research.google.com/github/googlesamples/mediapipe/blob/main/examples/face_landmarker/python/%5BMediaPipe_Python_Tasks%5D_Face_Landmarker.ipynb"""
+    """
+    detect and draw landmarks on a single image for more info: 
+    https://colab.research.google.com/github/googlesamples/mediapipe/blob/main/examples/face_landmarker/python/%5BMediaPipe_Python_Tasks%5D_Face_Landmarker.ipynb
+    """
     
     face_landmarks_list = detection_result.face_landmarks
     annotated_image = tf.keras.ops.copy(rgb_image).numpy()
@@ -89,7 +95,7 @@ def plot_face_blendshapes_bar_graph(face_blendshapes):
 def detector():
     # Create an FaceLandmarker object.
     base_options = python.BaseOptions(
-      model_asset_path='/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/face_landmarker_v2_with_blendshapes.task',
+      model_asset_path=os.getenv("FACE_LANDMARKER"),
       delegate=mp.tasks.BaseOptions.Delegate.GPU
       )
     options = vision.FaceLandmarkerOptions(base_options=base_options,

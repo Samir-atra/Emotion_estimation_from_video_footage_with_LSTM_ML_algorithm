@@ -7,7 +7,10 @@ for training the LSTM model and plotting the features by classes
 import csv
 import numpy as np
 import tensorflow as tf
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 def load_training_data():
     """
@@ -22,8 +25,7 @@ def load_training_data():
     blend_set = []
     labels_set = []
 
-    with open(
-        "/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/Datasets/blends_train_full_set.csv",
+    with open(os.getenv("TRAIN_DATASET"),
         mode="r", encoding="utf-8"
     ) as data:
         csvfile = csv.reader(data)
@@ -61,8 +63,7 @@ def load_validation():
     valdata = []
     val_blend_set = []
     val_labels_set = []
-    with open(
-        "/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/Datasets/blends_val_full_set.csv",
+    with open(os.getenv("VAL_DATASET"),
         mode="r", encoding="utf-8"
     ) as val_data:
         csvfile = csv.reader(val_data)

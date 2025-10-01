@@ -5,11 +5,13 @@ add an index to the dataset to be processed and analyzed later for errors
 import numpy as np
 from utils.csv_writer import csv_writer
 from data.data_cleaning import sets_cleaner
+from dotenv import load_dotenv
+import os
+import sys
 
+load_dotenv()
 
-test_set_hus = sets_cleaner(
-    "/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/Datasets/test_set_full.csv"
-)
+test_set_hus = sets_cleaner(os.getenv("TEST_DATASET"))
 
 nums = np.array(
     list(range(0, 1611))

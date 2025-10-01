@@ -3,9 +3,16 @@
 import csv
 import numpy as np
 import keras
+from dotenv import load_dotenv
+import os
+import sys
+
+load_dotenv()
+
+
 
 model = keras.models.load_model(
-    "/home/samer/Desktop/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/trained_models/epoch4437val_loss0.6506.keras"
+    "/home/samer/Desktop/Research/Emotion estimation using LSTM/epoch4437val_loss0.6506.keras"
 )  # load the model from the .keras file
 
 # plot the model structure in a .png image
@@ -26,7 +33,7 @@ keras.utils.plot_model(
 test_blend_set = []
 test_labels_set = []
 test_index_set = []
-with open("blends_test_index.csv", mode="r", encoding="utf-8") as test_data:
+with open(os.getenv("TEST_DATASET"), mode="r", encoding="utf-8") as test_data:
     csvFile = csv.reader(test_data)
     next(csvFile)
     for lines in csvFile:
@@ -41,4 +48,4 @@ X_test = np.reshape(test_blend_set, (1646, 52, 1))
 model.evaluate(X_test, test_labels_set)   # evaluate the model performance using the test set
 
 
-model.save("LSTM_model_full_data_acc:63_f1:55.keras")    # save the tested model as a .keras file
+# model.save("LSTM_model_full_data_acc:63_f1:55.keras")    # save the tested model as a .keras file

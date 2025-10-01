@@ -8,7 +8,10 @@ import mediapipe as mp
 import matplotlib.pyplot as plt
 import tensorflow as tf
 from mediapipe_tools.visualizing_and_setup import detector
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 def categories_and_unreadable_counter(fer2013_path):
     """
@@ -107,5 +110,5 @@ def balanced_dataset(full_set_path):
 
 
 # if __name__ == "__main__":
-#     categories_and_unreadable_counter("/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/Datasets/fer2013.csv")
-#     balanced_dataset("/home/samer/Desktop/HAN stuff/Big data Small Data/BDSD/Minor_project/BDSD_Minor_Project/Datasets/training_set_full.csv")
+#     categories_and_unreadable_counter(os.getenv("FER2013"))
+#     balanced_dataset(os.getenv("TRAIN_DATASET"))

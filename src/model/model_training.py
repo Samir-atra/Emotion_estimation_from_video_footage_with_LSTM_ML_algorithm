@@ -5,7 +5,17 @@ with compiling and checkpoints
 
 
 import keras
+from dotenv import load_dotenv
+import os
+import sys
 
+# Add the 'src' directory to the Python path to resolve module imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Load environment variables from .env file
+load_dotenv()
+
+from data.data_loading import load_training_data, load_validation
 
 
 def train_model(x_train, y_train, x_val, y_val):
@@ -100,3 +110,9 @@ def train_model(x_train, y_train, x_val, y_val):
     keras.utils.plot_model(model, show_shapes=True, rankdir="LR")     # plot the model structure
 
     return model
+
+if __name__ == "__main__":
+    # Load training and validation data
+    x_train, y_train = load_training_data()
+    x_val, y_val = load_validation()
+    train_model(x_train, y_train, x_val, y_val)
