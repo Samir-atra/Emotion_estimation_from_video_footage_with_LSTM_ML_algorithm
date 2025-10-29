@@ -32,7 +32,7 @@ To download a sample image for testing and visualizing the blendshapes
 
 Or you can download the blendshapes dataset from: https://www.kaggle.com/datasets/samerattrah/fer2013-blendshapes-dataset-example-partial
 
-and might use the pre-trained LSTM model, which you can find at: https://huggingface.co/SamerAttrah/Emotion_estimation_from_video_footage_with_LSTM/resolve/main/epoch4437val_loss0.6506.keras
+and might use the pre-trained LSTM model, which you can find at: [HuggingFace](https://huggingface.co/SamerAttrah/Emotion_estimation_from_video_footage_with_LSTM/resolve/main/epoch4437val_loss0.6506.keras) or [Kaggle](https://www.kaggle.com/models/samerattrah/blendfer-lite)
 
 ## Reference
 
