@@ -2,24 +2,23 @@
 augmenting the dataset and adding the new images to the training set 
 and normalizing the dataset after extracting the mean and variance
 """
-
+import os
 import math
 import numpy as np
 import tensorflow as tf
+import keras
 import mediapipe as mp
+from dotenv import load_dotenv
 from utils.csv_writer import csv_writer
 from data.data_cleaning import sets_cleaner
 from mediapipe_tools.visualizing_and_setup import detector
-from dotenv import load_dotenv
-import os
-import sys
 
 load_dotenv()
 
 training_set_hus = sets_cleaner(os.getenv("TRAIN_DATASET"))
 
 
-def augment_load_data(training_set_hus):
+def augment_load_data(training_set):
     """
     load the training dataset to be augmented
 
@@ -35,12 +34,12 @@ def augment_load_data(training_set_hus):
     training_labels = []
 
     # create an image list and a labels list for the training dataset
-    for i in range(math.floor(len(training_set_hus))):
+    for i in range(math.floor(len(training_set))):
         image = (
-            np.array(training_set_hus[i][1].split()).reshape(48, 48, 1).astype(np.uint8)
+            np.array(training_set[i][1].split()).reshape(48, 48, 1).astype(np.uint8)
         )
         training_images.append(image)
-        training_labels.append(int(training_set_hus[i][0]))
+        training_labels.append(int(training_set[i][0]))
 
     return training_images, training_labels
 
@@ -54,12 +53,12 @@ def augmentation_models():
       rescaling2: A sequential model for scaling up pixel values
       augment: A sequential model for image augmentation
     """
-    rescaling1 = tf.keras.Sequential([tf.keras.layers.Rescaling(1.0 / 255)])     # scale the image down
+    rescaling1 = keras.Sequential([keras.layers.Rescaling(1.0 / 255)])   # scale the image down
 
-    rescaling2 = tf.keras.Sequential([tf.keras.layers.Rescaling(1.0 * 255)])     # scale the image up
+    rescaling2 = keras.Sequential([keras.layers.Rescaling(1.0 * 255)])    # scale the image up
     # apply horizontal flip and random rotation to the image
-    augment = tf.keras.Sequential(
-        [tf.keras.layers.RandomFlip("horizontal"), tf.keras.layers.RandomRotation(0.1)]
+    augment = keras.Sequential(
+        [keras.layers.RandomFlip("horizontal"), keras.layers.RandomRotation(0.1)]
     )
     return rescaling1, rescaling2, augment
 
@@ -81,28 +80,28 @@ def augment_images(training_images, training_labels, rescaling1, rescaling2, aug
     """
     augmented_training_set = []
 
-    for ele in range(len(training_images)):
-        img = training_images[ele]
-        label = training_labels[ele]
-        image = rescaling1(img)
-        aug_image = augment(image)         # apply augmentations on the image
+    for idx, img in enumerate(training_images):
+        image = img
+        label = training_labels[idx]
+        image = rescaling1(image)
+        aug_image = augment(image)                   # apply augmentations on the image
         aug_image = rescaling2(aug_image)
         aug_image = tf.cast(aug_image, tf.uint8)        # cast the pixels values into integers
         aug_image = np.array(aug_image)
         flatten_image = (
             aug_image.flatten()
-        )  
+        )
         # flatten the augmented image, to be used in creating the csv file
         flat_aug_image = [flatten_image[i] for i in range(0, len(flatten_image))]
         frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=aug_image)
         detection_result = detector()
-        
+
         # check if the face in the image are detectable with mediapipe
-        detection_result = detection_result.detect(frame) 
+        detection_result = detection_result.detect(frame)
         if detection_result.face_blendshapes == []:
             continue
         else:
-            element = [training_labels[ele]]
+            element = [label]
             for i in flat_aug_image:
                 element.append(i)
             augmented_training_set.append(
@@ -133,13 +132,13 @@ def normalize(x_train, x_val):
         NX_val (list): normalized validation set
     """
 
-    mean = tf.math.reduce_mean(x_train, axis=0)            # find the mean of the dataset for the normalization layer
-    stddev = tf.math.reduce_std(x_train, axis=0)          # find the standard deviation
+    mean = tf.math.reduce_mean(x_train, axis=0)      # find the mean of the dataset for the normalization layer
+    stddev = tf.math.reduce_std(x_train, axis=0)     # find the standard deviation
     mean = np.array(mean).T
     stddev = np.array(stddev).T
 
     # normalize data
-    norm = tf.keras.layers.Normalization(axis=1)
+    norm = keras.layers.Normalization(axis=1)
     norm.adapt(x_train)
     xx_train = norm(x_train)
     nx_train = np.array(xx_train)

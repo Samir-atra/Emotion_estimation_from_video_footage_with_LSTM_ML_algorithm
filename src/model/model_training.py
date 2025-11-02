@@ -5,6 +5,7 @@ with compiling and checkpoints
 
 
 import keras
+import tensorflow as tf
 from dotenv import load_dotenv
 import os
 import sys
@@ -16,7 +17,15 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 load_dotenv()
 
 from data.data_loading import load_training_data, load_validation
+import datetime
 
+log_dir = "logs/profile/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+# Profile batches 10 to 15 (inclusive)
+# This collects performance data, including operation execution times (latency)
+tboard_callback = tf.keras.callbacks.TensorBoard(
+    log_dir=log_dir,
+    profile_batch='10, 15'
+)
 
 def train_model(x_train, y_train, x_val, y_val):
     """train the model for manually set hyperparameters"""
@@ -44,7 +53,7 @@ def train_model(x_train, y_train, x_val, y_val):
             keras.layers.LSTM(
                 units=44,
                 activation="selu",
-                return_sequences=True,
+                return_sequences=False,
                 kernel_regularizer=keras.regularizers.L2(l2=0.00000195),
             ),
             keras.layers.Dense(units=3, activation="softmax"),
@@ -62,7 +71,7 @@ def train_model(x_train, y_train, x_val, y_val):
         metrics=[
             keras.metrics.CategoricalCrossentropy(),
             keras.metrics.CategoricalAccuracy(),
-            keras.metrics.F1Score(),
+            keras.metrics.F1Score(average="macro"),
         ],
     )
 
@@ -101,11 +110,11 @@ def train_model(x_train, y_train, x_val, y_val):
         x=x_train,
         y=y_train,
         validation_data=(x_val, y_val),
-        epochs=2000,
+        epochs=20,
         batch_size=150,
         verbose=2,
         class_weight=class_weight,
-        callbacks=[model_checkpoint_callback, early_stop],   # use the callbaacks model checkpoint and early stop
+        callbacks=[model_checkpoint_callback, early_stop, tboard_callback],   # use the callbaacks model checkpoint and early stop
     )
     keras.utils.plot_model(model, show_shapes=True, rankdir="LR")     # plot the model structure
 

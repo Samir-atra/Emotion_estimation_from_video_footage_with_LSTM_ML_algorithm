@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import mediapipe as mp
 from mediapipe_tools.visualizing_and_setup import detector, draw_landmarks_on_image
 from utils.csv_writer import csv_writer
-from utils.prediction import generate_prediction
+from src.utils.prediction_and_latency import generate_prediction
 from dotenv import load_dotenv
 import os
 import sys
