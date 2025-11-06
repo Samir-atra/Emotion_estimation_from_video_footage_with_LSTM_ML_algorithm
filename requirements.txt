@@ -1,9 +1,10 @@
 # python==3.9
-dotenv
+python-dotenv
 numpy~=1.23
 mediapipe~=0.10.11
 matplotlib~=3.8.3
 keras==2.15.0
 tensorflow>=2.15.0
-mediapipe
-keras-tuner -q
+keras-tuner
+opencv-python
+PyQt5

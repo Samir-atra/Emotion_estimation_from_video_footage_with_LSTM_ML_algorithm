@@ -7,6 +7,7 @@ image
 """
 
 import matplotlib.pyplot as plt
+import numpy as np
 import tensorflow as tf
 import mediapipe as mp
 from mediapipe.tasks import python
@@ -26,7 +27,7 @@ def draw_landmarks_on_image(rgb_image, detection_result):
     """
     
     face_landmarks_list = detection_result.face_landmarks
-    annotated_image = tf.keras.ops.copy(rgb_image).numpy()
+    annotated_image = np.copy(rgb_image)
 
     # Loop through the detected faces to visualize.
     for idx in range(len(face_landmarks_list)):
@@ -96,7 +97,7 @@ def detector():
     # Create an FaceLandmarker object.
     base_options = python.BaseOptions(
       model_asset_path=os.getenv("FACE_LANDMARKER"),
-      delegate=mp.tasks.BaseOptions.Delegate.GPU
+      delegate=mp.tasks.BaseOptions.Delegate.CPU
       )
     options = vision.FaceLandmarkerOptions(base_options=base_options,
                                           output_face_blendshapes=True,

@@ -1,6 +1,8 @@
-"""
-count the number of images in each class and the images ignored from 
-the dataset and create class balanced dataset
+"""Module for processing and balancing emotion recognition datasets.
+
+This module provides functionalities to:
+- Count images per class and identify images unreadable by MediaPipe.
+- Create a class-balanced dataset with a reduced number of emotion categories (Happy, Sad, Unknown).
 """
 
 import csv
@@ -15,57 +17,88 @@ load_dotenv()
 
 def categories_and_unreadable_counter(fer2013_path):
     """
-    counts the number of images in each class in one dictionary and
-    the number of the images unreadable by mediapipe in another dictionary
+    Counts the number of images in each emotion class and the number of images
+    that MediaPipe cannot detect a face in.
+
+    This function reads an image dataset (e.g., FER2013), iterates through each image,
+    and performs the following:
+    1. Increments a counter for each emotion class.
+    2. Processes the image to be compatible with MediaPipe.
+    3. Uses MediaPipe's face detector to check for blendshapes.
+    4. If no face is detected, increments a 'skipped' counter for that emotion class.
+
+    Args:
+        fer2013_path (str): The absolute path to the FER2013 dataset CSV file.
+
+    Prints:
+        - The counts of images per category.
+        - The counts of skipped (unreadable by MediaPipe) images per category.
     """
-    # create dictionaries for the counting of the classes of the dataset 
-    # and another for the images that are not readable by mediapipe
+    # Initialize dictionaries to count images per category and skipped images
     categories_counts = {"0": 0, "1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0}
     skipped = {"0": 0, "1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0}
 
-    data = tf.io.read_file(fer2013_path)  # open the dataset file
-    # break down the dataset into lines, to have the rows separated
+    # Read the dataset file using TensorFlow's file I/O
+    data = tf.io.read_file(fer2013_path)
+    # Split the dataset into individual lines (rows)
     f = tf.strings.split(data, sep="\n")
-    for lines in f[1:-1]:  # loop throught the training instances
-        # print(type(lines))  # a debigging step
-        # extract the dictionary keys (labels) from the dataset 
+    
+    # Iterate through each line (instance) in the dataset, skipping the header and last empty line
+    for lines in f[1:-1]:
+        # Extract the emotion label (key) from the current line
         key = str(tf.strings.as_string(lines).numpy().decode("utf-8")).split(",")[0]
         if key in categories_counts.keys():
             categories_counts[key] = categories_counts[key] + 1
-        image = (
+        
+        # Process the string of pixels into an image format suitable for MediaPipe
+        image_pixels_str = (
             str(tf.strings.as_string(lines).numpy().decode("utf-8"))
             .split(",")[1]
             .split(" ")
-        ) # process the string of pixels into the image
+        )
         
-        # indirectly related steps to the process of checking the readablility of the images
-        # then process the images with mediapipe detector 
-        image = tf.convert_to_tensor(image)
-        image = tf.make_tensor_proto(image, dtype=tf.uint8)
-        image = tf.make_ndarray(image).reshape(48, 48, 1)
-        image = tf.convert_to_tensor(image, dtype=tf.uint8)
-        image = tf.image.grayscale_to_rgb(image).numpy()
-        rgb_frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=image)
-        detection_result = detector()
-        detection_result = detection_result.detect(
-            rgb_frame
-        )  # detect the face in the image
-        # check if the image get recognized or skipped by mediapipe
-        if (
-            detection_result.face_blendshapes == []
-        ):  # check if mediapipe is able to detect a face in the image
-            skipped[key] = skipped[key] + 1
+        # Convert pixel strings to TensorFlow tensor, reshape, and convert to RGB
+        image_tensor = tf.convert_to_tensor(image_pixels_str)
+        image_tensor = tf.make_tensor_proto(image_tensor, dtype=tf.uint8)
+        image_array = tf.make_ndarray(image_tensor).reshape(48, 48, 1)
+        image_tensor_uint8 = tf.convert_to_tensor(image_array, dtype=tf.uint8)
+        rgb_frame_data = tf.image.grayscale_to_rgb(image_tensor_uint8).numpy()
+        
+        # Create MediaPipe Image object
+        rgb_frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=rgb_frame_data)
+        
+        # Detect the face in the image using MediaPipe detector
+        face_landmarker_detector = detector()
+        detection_result = face_landmarker_detector.detect(rgb_frame)
+        
+        # Check if MediaPipe was able to detect a face (i.e., blendshapes are present)
+        if detection_result.face_blendshapes == []:
+            skipped[key] = skipped[key] + 1  # Increment skipped counter if no face detected
         else:
-            continue
-    print(categories_counts)
-    print(skipped)
+            continue  # Continue to the next image if a face is detected
+            
+    print("Image counts per category:", categories_counts)
+    print("Skipped image counts per category (unreadable by MediaPipe):", skipped)
 
 
 def balanced_dataset(full_set_path):
     """
-    Create a dataset with equal number of images for each
-    class of the eight in the original dataset and create from them a dataset
-    of three classes Happy, sad and unknown
+    Creates a class-balanced dataset by sampling a limited number of images
+    from each of the original seven emotion classes and remapping them into
+    a three-class system (Happy, Sad, Unknown).
+
+    This function reads a full dataset, iterates through its instances, and selectively
+    appends images to a new dataset (`fullset`) based on class limits to achieve balance.
+    Original emotion labels are remapped as follows:
+    - Original classes 0, 1, 2, 5, 6 are remapped to '1' (e.g., Sad, Fear, Disgust, Surprise, Neutral).
+    - Original class 3 (Happy) is remapped to '0'.
+    - Original class 4 (Angry) is remapped to '2'.
+
+    Args:
+        full_set_path (str): The absolute path to the full dataset CSV file.
+
+    Returns:
+        list: A list representing the new class-balanced dataset with remapped labels.
     """
 
     fullset = []
@@ -73,42 +106,48 @@ def balanced_dataset(full_set_path):
 
     with open(full_set_path, mode="r", encoding="utf-8") as data:
         csvfile = csv.reader(data)
-        next(csvfile)
-        # iterate over the dataset and append the images to a list, for limited numbers according to it's classes, to creat the training set
+        next(csvfile)  # Skip the header row
+        
+        # Iterate over the dataset and append images to a list, applying class limits and remapping labels
         for lines in csvfile:
+            # Remap and limit images for class '1' (Sad, Fear, Disgust, Surprise, Neutral)
             if lines[0] == "0" and class_counter["0"] < 1500:
                 class_counter[lines[0]] = class_counter[lines[0]] + 1
-                lines[0] = "1"
+                lines[0] = "1"  # Remap to '1'
                 fullset.append(lines)
             elif lines[0] == "1" and class_counter["1"] < 1500:
                 class_counter[lines[0]] = class_counter[lines[0]] + 1
-                lines[0] = "1"
+                lines[0] = "1"  # Remap to '1'
                 fullset.append(lines)
             elif lines[0] == "2" and class_counter["2"] < 1500:
                 class_counter[lines[0]] = class_counter[lines[0]] + 1
-                lines[0] = "1"
+                lines[0] = "1"  # Remap to '1'
                 fullset.append(lines)
+            # Remap and limit images for class '0' (Happy)
             elif lines[0] == "3" and class_counter["3"] < 4000:
                 class_counter[lines[0]] = class_counter[lines[0]] + 1
-                lines[0] = "0"
+                lines[0] = "0"  # Remap to '0'
                 fullset.append(lines)
+            # Remap and limit images for class '2' (Angry)
             elif lines[0] == "4" and class_counter["4"] < 4000:
                 class_counter[lines[0]] = class_counter[lines[0]] + 1
-                lines[0] = "2"
+                lines[0] = "2"  # Remap to '2'
                 fullset.append(lines)
+            # Remap and limit images for class '1' (Sad, Fear, Disgust, Surprise, Neutral)
             elif lines[0] == "5" and class_counter["5"] < 1500:
                 class_counter[lines[0]] = class_counter[lines[0]] + 1
-                lines[0] = "1"
+                lines[0] = "1"  # Remap to '1'
                 fullset.append(lines)
             elif lines[0] == "6" and class_counter["6"] < 1500:
                 class_counter[lines[0]] = class_counter[lines[0]] + 1
-                lines[0] = "1"
+                lines[0] = "1"  # Remap to '1'
                 fullset.append(lines)
 
-    print(class_counter)
+    print("Class distribution after balancing and remapping:", class_counter)
     return fullset
 
 
+# Example usage when run as a script
 # if __name__ == "__main__":
 #     categories_and_unreadable_counter(os.getenv("FER2013"))
 #     balanced_dataset(os.getenv("TRAIN_DATASET"))
